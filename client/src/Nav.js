@@ -15,11 +15,12 @@ function Nav() {
   return (
     <nav className="Nav">
         <div className="Nav-left">
-            <NavLink exact to="/allItems">All Items</NavLink>
+            <NavLink exact to="/">All Items</NavLink>
         </div>
         <div className="Nav-right">
             <NavLink to="/currentItems">Current Items</NavLink>
             <NavLink to="/deletedItems">Deleted Items</NavLink>
+            <NavLink to="/addItem">Add New Item</NavLink>
         </div>
     </nav>
   );
