@@ -1,0 +1,7 @@
+flask
+flask-cors
+flask-sqlalchemy
+ipython
+psycopg2-binary
+sqlalchemy
+python-dotenv
