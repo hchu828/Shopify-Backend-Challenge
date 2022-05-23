@@ -7,9 +7,9 @@ import {
   Input
 } from "reactstrap";
 
-function DeleteItemForm({ handleSave }) {
+function DeleteItemForm({ id, handleSave }) {
 
-  const [form, setform] = useState({msg: ""});
+  const [form, setform] = useState({ msg: ""});
 
   const history = useHistory();
 
@@ -23,8 +23,8 @@ function DeleteItemForm({ handleSave }) {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-
-    handleSave({...form})
+    
+    handleSave({...form, id})
     history.push("/");
   }
 

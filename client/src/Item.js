@@ -3,11 +3,10 @@ import React from "react";
 function Item({id, name, price, deleted, msg }) {
   return (
     <div className="Todo">
-        <b>{name}</b>
+        <b>{deleted && "(DELETED)"}{name}</b>
         {deleted && 
         <div>
-          <small>(deleted)</small>
-          <small>{msg}</small>
+          <small>Message:{msg}</small>
         </div>
         }
         <div>

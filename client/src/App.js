@@ -1,7 +1,13 @@
 import {React, useState, useEffect } from "react";
 import './App.css';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { getAllItems, addItemApi, editItemApi, softDeleteItemApi } from "./Api";
+import { 
+  getItemsApi, 
+  addItemApi, 
+  editItemApi, 
+  softDeleteItemApi,
+  softUndeleteItemApi,
+  hardDeleteItemApi} from "./Api";
 import Nav from "./Nav";
 import ItemForm from "./ItemForm";
 import ItemList from "./ItemList";
@@ -13,7 +19,7 @@ function App() {
   /** Get all items on initial load */
   useEffect(function() {
     async function getItems() {
-        const data = await getAllItems();
+        const data = await getItemsApi();
         setItems(data.items);
         setIsLoading(false);
     }
@@ -39,14 +45,30 @@ function App() {
     ));
   }
 
-  async function deleteItem(msg) {
-    let deletedItem = await softDeleteItemApi(msg);
+  async function deleteItem(formData) {
+    let deletedItem = await softDeleteItemApi(formData);
     console.log("Deleting item");
     setItems(item => item.map((i) =>
       i.id === deletedItem.id
         ? { ...deletedItem }
         : i
     ));
+  }
+
+  async function undeleteItem(formData) {
+    let undeletedItem = await softUndeleteItemApi(formData);
+    console.log("Undeleting item");
+    setItems(item => item.map((i) =>
+      i.id === undeletedItem.id
+        ? { ...undeletedItem }
+        : i
+    ));
+  }
+
+  async function hardDeleteItem(id) {
+    let deletedMsg = await hardDeleteItemApi(id);
+    console.log("Permanently deleting item", deletedMsg);
+    setItems((item => item.filter((i) => i.id !== id)));
   }
 
 
@@ -65,6 +87,8 @@ function App() {
               items={items} 
               editItem={editItem} 
               deleteItem={deleteItem}
+              undeleteItem={undeleteItem}
+              hardDeleteItem={hardDeleteItem}
             />
           </Route>
           <Route exact path="/addItem">

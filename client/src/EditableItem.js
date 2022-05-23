@@ -3,7 +3,7 @@ import ItemForm from "./ItemForm";
 import Item from "./Item";
 import DeleteItemForm from "./DeleteItemForm";
 
-function EditableItem({item, editItem, deleteItem }) {
+function EditableItem({item, editItem, deleteItem, undeleteItem, hardDeleteItem }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -23,9 +23,17 @@ function EditableItem({item, editItem, deleteItem }) {
     editItem(formData);
   };
 
-  function handleDeleteSave(msg) {
+  function handleDeleteSave(formData) {
     toggleDelete();
-    deleteItem(msg);
+    deleteItem(formData);
+  }
+
+  function handleUndeleteSave() {
+    undeleteItem({id: item.id})
+  }
+
+  function handleHardDelete() {
+    hardDeleteItem({id: item.id });
   }
 
   return (
@@ -45,16 +53,30 @@ function EditableItem({item, editItem, deleteItem }) {
             deleted={item.deleted}
             msg={item.msg}
           />
-        <button onClick={toggleEdit}>
-          Edit Item
-        </button>
-        <button onClick={toggleDelete}>
-          Delete Item
-        </button>
+        {item.deleted
+        ? <>
+          <button onClick={handleUndeleteSave}>
+            Undelete Item
+          </button>
+          <button onClick={handleHardDelete}>
+            Permanently Delete Item
+          </button>
+          </>
+        :
+          <>
+          <button onClick={toggleEdit}>
+            Edit Item
+          </button>
+          <button onClick={toggleDelete}>
+            Delete Item
+          </button>
+          </>
+        }
         </div>
       }
       {isDeleting && 
-        <DeleteItemForm 
+        <DeleteItemForm
+          id={item.id} 
           handleSave={handleDeleteSave}
         />
       }

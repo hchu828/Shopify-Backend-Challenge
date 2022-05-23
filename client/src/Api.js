@@ -5,7 +5,7 @@ import axios from 'axios';
 const BASE_API_URL = "http://localhost:5001";
 
 /** Fetch list of all items in database */
-export async function getAllItems() {
+export async function getItemsApi() {
   let res = await axios.get(`${BASE_API_URL}/items`);
   return res.data;
 }
@@ -24,6 +24,18 @@ export async function editItemApi(data) {
 
 /** Soft delete item */
 export async function softDeleteItemApi(data) {
-  let res = await axios.delete(`${BASE_API_URL}/items/${data.id}`, data);
+  let res = await axios.patch(`${BASE_API_URL}/items/${data.id}/softdelete`, data);
   return res.data.item;
+}
+
+/** Soft undelete item */
+export async function softUndeleteItemApi(data) {
+  let res = await axios.patch(`${BASE_API_URL}/items/${data.id}/undelete`, data);
+  return res.data.item;
+}
+
+/** Hard delete item */
+export async function hardDeleteItemApi(data) {
+  let res = await axios.delete(`${BASE_API_URL}/items/${data.id}`, data);
+  return res.data;
 }
