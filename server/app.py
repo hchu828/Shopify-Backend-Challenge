@@ -24,7 +24,7 @@ def root():
 
 
 @app.get("/items")
-def list_items():
+def get_items():
     """Return all items in system
 
     Returns JSON like:
@@ -43,7 +43,7 @@ def list_items():
 
 
 @app.get("/items/<int:item_id>")
-def get_item_id(item_id):
+def get_item(item_id):
     """Return data on specific item
 
     Returns JSON like:
@@ -99,9 +99,29 @@ def update_item(item_id):
     return jsonify(item=item.to_dict())
 
 
-@app.delete("/items/<int:item_id>")
-def mark_as_deleted(item_id):
+@app.patch("/items/<int:item_id>/softdelete")
+def soft_delete(item_id):
     """Flag item as deleted
+
+    Returns JSON like:
+        {item: [{id, name, price, image, deleted}]}
+    """
+
+    data = request.json
+    item = Item.query.get_or_404(item_id)
+
+    item.deleted = True
+    item.msg = data['msg']
+
+    db.session.add(item)
+    db.session.commit()
+
+    return jsonify(item=item.to_dict())
+
+
+@app.patch("/items/<int:item_id>/undelete")
+def soft_undelete(item_id):
+    """Flag item as undeleted (normal) and deletes msg
 
     Returns JSON like:
         {item: [{id, name, price, image, deleted}]}
@@ -109,11 +129,10 @@ def mark_as_deleted(item_id):
 
     item = Item.query.get_or_404(item_id)
 
-    item.deleted = True
-    print(item)
+    item.deleted = False
+    item.msg = ""
 
     db.session.add(item)
     db.session.commit()
 
     return jsonify(item=item.to_dict())
-
