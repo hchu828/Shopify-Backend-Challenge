@@ -27,8 +27,20 @@ This repo holds both the frontend (in progress) and backend so that they are acc
 4. Run Flask
 `flask run`
 
+<b>An error that occurred on my machine was that the Flask-CORS did not work because the virtual environment was not setup correctly. If this issue occurs, please enter:</b>
+
+* `deactivate`
+* `source venv/bin/activate`
+* `flask run`
+
 5. Move into client
 `cd ../client`
 
 6. Install frontend dependencies
+* `npm i`
+
+<b>Testing with unittest </b>
+<p> While in the server folder, run `python3 -m unittest`</p>
+
+
 
