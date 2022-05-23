@@ -18,33 +18,38 @@ connect_db(app)
 
 @app.get("/")
 def root():
-    """Render homepage"""
+    """Render homepage."""
 
     return render_template("index.html")
 
 
 @app.get("/items")
 def get_items():
-    """Return all items in system
+    """Return items in system, with optional filtering.
 
     Returns JSON like:
         {items: [{id, name, price, image}, ...]}
     """
 
     filter = request.args.get("filter")
-    print(filter)
 
-    if filter is None:
+    if filter == "current":
+        items = [
+            item.to_dict() for item in Item.query.filter_by(deleted=False)]
+
+    elif filter == "deleted":
+        items = [
+            item.to_dict() for item in Item.query.filter_by(deleted=True)]
+
+    else:
         items = [item.to_dict() for item in Item.query.all()]
 
-    elif filter == "current":
-        items = [item.to_dict() for item in Item.query.filter_by(deleted=False)]
     return jsonify(items=items)
 
 
 @app.get("/items/<int:item_id>")
 def get_item(item_id):
-    """Return data on specific item
+    """Return data on specific item.
 
     Returns JSON like:
         {item: [{id, name, price, image, deleted}]}
@@ -56,7 +61,7 @@ def get_item(item_id):
 
 @app.post("/items")
 def create_item():
-    """Add item, and return data about newly-created item
+    """Add item, and return data about newly-created item.
 
     Returns JSON like:
         {item: [{id, name, price, image}]}
@@ -101,10 +106,10 @@ def update_item(item_id):
 
 @app.patch("/items/<int:item_id>/softdelete")
 def soft_delete(item_id):
-    """Flag item as deleted
+    """Flag item as deleted and store delete comment in msg.
 
     Returns JSON like:
-        {item: [{id, name, price, image, deleted}]}
+        {item: [{id, name, price, image, deleted, msg}]}
     """
 
     data = request.json
@@ -121,7 +126,7 @@ def soft_delete(item_id):
 
 @app.patch("/items/<int:item_id>/undelete")
 def soft_undelete(item_id):
-    """Flag item as undeleted (normal) and deletes msg
+    """Flag item as undeleted and removes msg field from db.
 
     Returns JSON like:
         {item: [{id, name, price, image, deleted}]}
@@ -130,9 +135,25 @@ def soft_undelete(item_id):
     item = Item.query.get_or_404(item_id)
 
     item.deleted = False
-    item.msg = ""
+    item.msg = None
 
     db.session.add(item)
     db.session.commit()
 
     return jsonify(item=item.to_dict())
+
+
+@app.delete("/items/<int:item_id>")
+def hard_delete(item_id):
+    """Hard deletes a soft-deleted item. Item is permanently removed
+    and cannto be recovered.
+
+    Returns JSON like: {msg: "Deleted"}
+    """
+
+    item = Item.query.get_or_404(item_id)
+
+    db.session.delete(item)
+    db.session.commit()
+
+    return jsonify(deleted=item_id)

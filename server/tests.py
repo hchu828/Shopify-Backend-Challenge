@@ -160,6 +160,16 @@ class ItemViewsTestCase(TestCase):
                     "price": 140213,
                     "image": "fakeImage",
                     "deleted": False,
-                    "msg": "",
+                    "msg": None,
                 }
             })
+
+    def test_hard_delete(self):
+        with app.test_client() as client:
+            url = f"/items/{self.item.id}"
+            resp = client.delete(url)
+
+            self.assertEqual(resp.status_code, 200)
+
+            data = resp.json
+            self.assertEqual(data, {"deleted": self.item.id})
