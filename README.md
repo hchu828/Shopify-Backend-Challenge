@@ -7,9 +7,9 @@ Built with:
 
 This repo holds both the frontend (in progress) and backend so that they are accessible at a single link.
 
-`/server` contains the Flask backend
+`/server` contains the Flask backend (runs on default port: 5000)
 
-`/client` contains the React frontend
+`/client` contains the React frontend (runs on default port: 3000)
 
 <b>Installation</b>
 
@@ -27,7 +27,7 @@ This repo holds both the frontend (in progress) and backend so that they are acc
 4. Run Flask
 `flask run`
 
-<b>An error that occurred on my machine was that the Flask-CORS did not work because the virtual environment was not setup correctly. If this issue occurs, please enter:</b>
+An error that occurred on my machine was that the Flask-CORS did not work because the virtual environment was not setup correctly. If this issue occurs, please enter:
 
 * `deactivate`
 * `source venv/bin/activate`
@@ -40,7 +40,7 @@ This repo holds both the frontend (in progress) and backend so that they are acc
 * `npm i`
 
 <b>Testing with unittest </b>
-<p> While in the server folder, run `python3 -m unittest`</p>
+<p> While in the server folder, run `python3 -m unittest` to run automated tests for backend view functions</p>
 
 
 

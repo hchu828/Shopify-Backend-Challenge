@@ -8,7 +8,7 @@ from models import db, connect_db, Item, DEFAULT_IMAGE
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///shopify-inventory'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shopify-inventory'
 app.config['SQLALCHEMY_TRACK_MODFICATIONS'] = False
 app.config['SECRET_KEY'] = 'super-secret-shopify-system'
 app.config['SQLALCHEMY_ECHO'] = True
